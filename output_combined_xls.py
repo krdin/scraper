@@ -115,19 +115,19 @@ def main():
                     "Товар заканчивается, уточняйте наличие": "5",
                 }
                 row_to_write['Кол-во_FURNISET'] = availability_map.get(availability_text, "0")
-                
                 row_to_write['Ссылка'] = f'{url}'
                 print(f"Row to Write: {row_to_write}")
-                df = df.append(row_to_write, ignore_index=True)
+                df = df.append(row_to_write, ignore_index=True)  # Добавляем данные в df в блоке try
+
             except Exception as e:
                 print(f"Ошибка при обработке URL {url}: {e}")
                 logger.error(f"Error processing URL {url}. Error: {e}")
                 print("Final DataFrame:")
-                print(df)  
+                print(df)
 
-    print("Сохранение собранных данных в output_combined.xlsx...")
-    df.to_excel("C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx", index=False)
-    print("Данные успешно сохранены!")
+        print("Сохранение собранных данных в output_combined.xlsx...")
+        df.to_excel("C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx", index=False)
+        print("Данные успешно сохранены!")
     
     # Чтение артикулов из файла
     with open('C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\art_gtv_hogert_test.txt', 'r') as f:
