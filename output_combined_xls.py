@@ -66,6 +66,7 @@ def main():
         for url in urls:
             try:
                 response = session.get(url.strip())
+                print(f"Status Code for {url.strip()}: {response.status_code}")
                 if response.status_code != 200:
                     logging.warning(f"Не удалось загрузить страницу: {url}, Status Code: {response.status_code}")
                     continue
@@ -76,6 +77,7 @@ def main():
                 sleep(2)
                 price_element = soup.select_one("span.tov_cena")
                 price = price_element.text.strip() if price_element else "не указана"
+                print(f"Price: {price}")
                 row_to_write['Цена_FURNISET'] = price
                           
                 name_h1_ru = soup.find('h1')
@@ -115,11 +117,17 @@ def main():
                 row_to_write['Кол-во_FURNISET'] = availability_map.get(availability_text, "0")
                 
                 row_to_write['Ссылка'] = f'{url}'
+                print(f"Row to Write: {row_to_write}")
+                df = df.append(row_to_write, ignore_index=True)
             except Exception as e:
                 print(f"Ошибка при обработке URL {url}: {e}")
-                logger.error(f"Error processing URL {url}. Error: {e}")   
+                logger.error(f"Error processing URL {url}. Error: {e}")
+                print("Final DataFrame:")
+                print(df)  
 
-       
+    print("Сохранение собранных данных в output_combined.xlsx...")
+    df.to_excel("C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx", index=False)
+    print("Данные успешно сохранены!")
     
     # Чтение артикулов из файла
     with open('C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\art_gtv_hogert_test.txt', 'r') as f:
@@ -127,6 +135,7 @@ def main():
 
     # Удаление лишних пробелов и получение уникальных артикулов
     unique_articles = set(article.strip() for article in articles)
+
 
     print("Начало обработки уникальных артикулов")
     for art_value in unique_articles:
@@ -165,9 +174,14 @@ def main():
             logger.error(f"Error processing article {art_value}. Error: {e}") 
 
     # Сохранение файла после обработки всех артикулов
+    print("Количество строк в DataFrame перед сохранением:", len(df))
+    print(df.head())
     output_file_path = 'C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx'
+    print("Содержимое DataFrame перед сохранением:")
+    print(df)
     df.to_excel(output_file_path, index=False)
-    print(f"Файл успешно сохранен по пути: {output_file_path}")           
+    print(f"Файл успешно сохранен по пути: {output_file_path}")
+              
 
     
 
