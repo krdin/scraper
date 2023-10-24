@@ -1,0 +1,27 @@
+2023-10-24 17:59:06,329 - root - INFO - This is an info message for furniset script.
+2023-10-24 17:59:06,329 - root - ERROR - This is an error message for furniset script.
+2023-10-24 17:59:06,334 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): furniset.com.ua:443
+2023-10-24 17:59:06,906 - urllib3.connectionpool - DEBUG - https://furniset.com.ua:443 "GET /ru/t9483-petlya-gtv-165%D0%92%C2%B0-uglovaya-bez-prujini-uglovaya-opornaya-planka-n-2-s-evro-shurupom HTTP/1.1" 200 None
+2023-10-24 17:59:09,091 - urllib3.connectionpool - DEBUG - https://furniset.com.ua:443 "GET /ru/t9482-petlya-gtv-90%D0%92%C2%B0-ravnolejaschaya-bez-prujini-pod-falshpanel-opornaya-planka-n-2-s-evro-shurupom HTTP/1.1" 200 None
+2023-10-24 17:59:11,300 - urllib3.connectionpool - DEBUG - https://furniset.com.ua:443 "GET /ru/t9481-petlya-gtv-45%D0%92%C2%B0-uglovaya-bez-prujini-uglovaya-opornaya-planka-n-2-s-evro-shurupom HTTP/1.1" 200 None
+2023-10-24 17:59:13,484 - urllib3.connectionpool - DEBUG - https://furniset.com.ua:443 "GET /ru/t9480-nojka-reguliruemaya-gtv-mla-n-95-145-cherniy HTTP/1.1" 200 None
+2023-10-24 17:59:15,684 - urllib3.connectionpool - DEBUG - https://furniset.com.ua:443 "GET /ru/t8058-rejs-corner-comfort-hrombeliy-800-praviy-maxima-evo-ii HTTP/1.1" 200 None
+2023-10-24 17:59:17,897 - urllib3.connectionpool - DEBUG - https://furniset.com.ua:443 "GET /ru/t8057-rejs-corner-comfort-hrombeliy-800-leviy-maxima-evo-ii HTTP/1.1" 200 None
+2023-10-24 17:59:19,999 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): gtv.com.ua:443
+2023-10-24 17:59:20,873 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=HT1S008&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:23,313 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=HT1S008&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:23,444 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): rejs.com.ua:443
+2023-10-24 17:59:24,224 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=HT1S008&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:26,547 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=HT1S008&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:27,018 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=pd-ecgdl-060&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:29,461 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=pd-ecgdl-060&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:29,821 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=pd-ecgdl-060&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:32,151 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=pd-ecgdl-060&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:32,557 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=WE30.0001.08.374&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:34,960 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=WE30.0001.08.374&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:35,352 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=WE30.0001.08.374&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:37,717 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=WE30.0001.08.374&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:38,174 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=pd-ecgdl-080&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:40,671 - urllib3.connectionpool - DEBUG - https://gtv.com.ua:443 "GET /catalog/?q=pd-ecgdl-080&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:41,054 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=pd-ecgdl-080&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
+2023-10-24 17:59:43,465 - urllib3.connectionpool - DEBUG - https://rejs.com.ua:443 "GET /catalog/?q=pd-ecgdl-080&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8 HTTP/1.1" 200 None
