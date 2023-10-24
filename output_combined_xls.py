@@ -27,10 +27,10 @@ logger.info("This is an info message for furniset script.")
 logger.error("This is an error message for furniset script.")
 start_time = datetime.now()
 
-def get_additional_data(session, headers, url, field_name):
-    sleep(2)
-    response = session.get(url, headers=headers)
-    soup = BeautifulSoup(response.content, 'html.parser')
+def get_additional_data(soup, field_name):
+    #sleep(2)
+    #response = session.get(url, headers=headers)
+    #soup = BeautifulSoup(response.content, 'html.parser')
     
     price_elem = soup.select_one('.cost .price .price_value')
     if price_elem:
@@ -61,8 +61,8 @@ def main():
 
     with requests.Session() as session:
         session.headers.update(headers)
-
         print("Starting main loop for URLs...")
+        
         for url in urls:
             try:
                 response = session.get(url.strip())
@@ -120,6 +120,7 @@ def main():
                 logger.error(f"Error processing URL {url}. Error: {e}")   
 
        
+    
     # Чтение артикулов из файла
     with open('C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\art_gtv_hogert_test.txt', 'r') as f:
         articles = f.readlines()
@@ -142,7 +143,7 @@ def main():
             product_name_gtv = name_elem_gtv.text.strip() if name_elem_gtv else "Не найдено"
             
             # Получение дополнительных данных с gtv.com.ua
-            gtv_data = get_additional_data(session, headers, url_gtv, 'GTV')
+            gtv_data = get_additional_data(soup_gtv, 'GTV')
             
             # Обработка REJS
             url_rejs = f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8"
@@ -150,7 +151,7 @@ def main():
             soup_rejs = BeautifulSoup(response_rejs.content, 'html.parser')
             
             # Получение дополнительных данных с rejs.com.ua
-            rejs_data = get_additional_data(session, headers, url_rejs, 'REJS')
+            rejs_data = get_additional_data(soup_rejs, 'REJS')
 
             # Обновление DataFrame
             row_to_write = {
