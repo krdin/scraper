@@ -6,6 +6,10 @@ import logging
 from datetime import datetime
 from time import sleep
 
+headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537'
+    }
+
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG) 
 
@@ -28,28 +32,26 @@ logger.error("This is an error message for furniset script.")
 start_time = datetime.now()
 
 def get_additional_data(soup, field_name):
-    # Извлечение данных о цене
-    price_elem = soup.select_one('.new_selector_for_price')
+    # Для цены
+    price_elem = soup.select_one('.price .price_value')
     if price_elem:
-        price = float(price_elem.text.replace("грн", "").replace(",", ".").replace(" ", ""))
+        price = float(price_elem.text.replace("грн", "").replace(" ", "").strip())
     else:
         price = 0
     
-    # Извлечение данных о количестве
-    quantity_elem = soup.select_one('.new_selector_for_quantity')
+    # Для количества
+    quantity_elem = soup.select_one('.plus')
+    print("Quantity Element:", quantity_elem)
     if quantity_elem:
-        quantity_text = re.findall(r'\d+', quantity_elem.attrs.get('data-max', '0'))
-        quantity = int(quantity_text[0]) if quantity_text else 0
+        quantity = int(quantity_elem.get('data-max', 0))
+        print("Data Max Value:", quantity_elem.get('data-max'))
     else:
         quantity = 0
+
     
     return {f'Цена_{field_name}': price, f'Кол-во_{field_name}': quantity}
 
 def main():
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537'
-    }
-    print("Reading URLs from file...")
     file_path = 'C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\art_gtv_hogert_ss_test.txt'
     with open(file_path, 'r') as f:
         urls = f.readlines()
@@ -59,7 +61,6 @@ def main():
 
     with requests.Session() as session:
         session.headers.update(headers)
-        print("Starting main loop for URLs...")
         
         for url in urls:
             try:
@@ -120,18 +121,18 @@ def main():
                 soup_gtv = BeautifulSoup(response_gtv.content, 'html.parser')
                 gtv_data = get_additional_data(soup_gtv, 'GTV')
                 if gtv_data:
-                    row_to_write['Цена_GTV'] = gtv_data.get('Цена_GTV', '')
-                    row_to_write['Кол-во_GTV'] = gtv_data.get('Кол-во_GTV', '')
+                    row_to_write['Цена_GTV'] = gtv_data.get('Цена_GTV', 0)  
+                    row_to_write['Кол-во_GTV'] = gtv_data.get('Кол-во_GTV', 0) 
 
                 # Получение данных с rejs.com.ua
                 response_rejs = session.get(f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", headers=headers)
                 soup_rejs = BeautifulSoup(response_rejs.content, 'html.parser')
                 rejs_data = get_additional_data(soup_rejs, 'REJS')
                 if rejs_data:
-                    row_to_write['Цена_REJS'] = rejs_data.get('Цена_REJS', '')
-                    row_to_write['Кол-во_REJS'] = rejs_data.get('Кол-во_REJS', '')
+                    row_to_write['Цена_GTV'] += rejs_data.get('Цена_REJS', 0) 
+                    row_to_write['Кол-во_GTV'] += rejs_data.get('Кол-во_REJS', 0)
 
-                df = pd.concat([df, pd.DataFrame([row_to_write])], ignore_index=True)  # Добавляем данные в df в блоке try
+                df = pd.concat([df, pd.DataFrame([row_to_write])], ignore_index=True)
                 print("Текущий DataFrame после добавления данных:")
                 print(df)
                 
@@ -184,7 +185,9 @@ def main():
                 'Артикул': art_value,
                 'Наименование': product_name_gtv
             }
-            df.loc[len(df)] = {**row_to_write, **gtv_data, **rejs_data}
+            row_to_write.update(gtv_data)
+            row_to_write.update(rejs_data)
+            df.loc[len(df)] = row_to_write
 
         except Exception as e:
             print(f"Ошибка при обработке артикула {art_value}: {e}")
