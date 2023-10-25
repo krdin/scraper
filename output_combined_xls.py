@@ -115,17 +115,22 @@ def main():
                 row_to_write['Кол-во_FURNISET'] = availability_map.get(availability_text, "0")
                 row_to_write['Ссылка'] = f'{url}'
                 print(f"Row to Write: {row_to_write}")
-                # Получение дополнительных данных с gtv.com.ua
-                gtv_data = get_additional_data(session, headers, f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", 'GTV')
+                # Получение данных с gtv.com.ua
+                response_gtv = session.get(f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", headers=headers)
+                soup_gtv = BeautifulSoup(response_gtv.content, 'html.parser')
+                gtv_data = get_additional_data(soup_gtv, 'GTV')
                 if gtv_data:
-                    row_to_write['Цена_GTV'] = gtv_data.get('price', '')
-                    row_to_write['Кол-во_GTV'] = gtv_data.get('availability', '')
+                    row_to_write['Цена_GTV'] = gtv_data.get('Цена_GTV', '')
+                    row_to_write['Кол-во_GTV'] = gtv_data.get('Кол-во_GTV', '')
 
-                # Получение дополнительных данных с rejs.com.ua
-                rejs_data = get_additional_data(session, headers, f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", 'REJS')
+                # Получение данных с rejs.com.ua
+                response_rejs = session.get(f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", headers=headers)
+                soup_rejs = BeautifulSoup(response_rejs.content, 'html.parser')
+                rejs_data = get_additional_data(soup_rejs, 'REJS')
                 if rejs_data:
-                    row_to_write['Цена_REJS'] = rejs_data.get('price', '')
-                    row_to_write['Кол-во_REJS'] = rejs_data.get('availability', '')
+                    row_to_write['Цена_REJS'] = rejs_data.get('Цена_REJS', '')
+                    row_to_write['Кол-во_REJS'] = rejs_data.get('Кол-во_REJS', '')
+
                 df = pd.concat([df, pd.DataFrame([row_to_write])], ignore_index=True)  # Добавляем данные в df в блоке try
                 print("Текущий DataFrame после добавления данных:")
                 print(df)
