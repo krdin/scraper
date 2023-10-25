@@ -117,8 +117,10 @@ def main():
                 row_to_write['Кол-во_FURNISET'] = availability_map.get(availability_text, "0")
                 row_to_write['Ссылка'] = f'{url}'
                 print(f"Row to Write: {row_to_write}")
-                df = df.append(row_to_write, ignore_index=True)  # Добавляем данные в df в блоке try
-
+                df = pd.concat([df, pd.DataFrame([row_to_write])], ignore_index=True)  # Добавляем данные в df в блоке try
+                print("Текущий DataFrame после добавления данных:")
+                print(df)
+                
             except Exception as e:
                 print(f"Ошибка при обработке URL {url}: {e}")
                 logger.error(f"Error processing URL {url}. Error: {e}")
