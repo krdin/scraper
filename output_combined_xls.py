@@ -61,6 +61,9 @@ def main():
 
     with requests.Session() as session:
         session.headers.update(headers)
+
+        session_gtv = requests.Session()
+        session_rejs = requests.Session()
         
         for url in urls:
             try:
@@ -162,7 +165,8 @@ def main():
 
             # Обработка GTV
             url_gtv = f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8"
-            response_gtv = session.get(url_gtv, headers=headers)
+            response_gtv = session_gtv.get(url_gtv, headers=headers)
+            print(response_gtv.text)
             soup_gtv = BeautifulSoup(response_gtv.content, 'html.parser')
             
             # Получение названия продукта для GTV
@@ -174,7 +178,7 @@ def main():
             
             # Обработка REJS
             url_rejs = f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8"
-            response_rejs = session.get(url_rejs, headers=headers)
+            response_rejs = session_rejs.get(url_rejs, headers=headers)
             soup_rejs = BeautifulSoup(response_rejs.content, 'html.parser')
             
             # Получение дополнительных данных с rejs.com.ua
@@ -188,6 +192,9 @@ def main():
             row_to_write.update(gtv_data)
             row_to_write.update(rejs_data)
             df.loc[len(df)] = row_to_write
+            
+            # Добавьте задержку перед следующим запросом
+            sleep(1)
 
         except Exception as e:
             print(f"Ошибка при обработке артикула {art_value}: {e}")
