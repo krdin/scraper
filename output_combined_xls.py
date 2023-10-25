@@ -27,20 +27,23 @@ logger.info("This is an info message for furniset script.")
 logger.error("This is an error message for furniset script.")
 start_time = datetime.now()
 
-def get_additional_data(session, headers, url, site_name):
-    try:
-        response = session.get(url, headers=headers)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Логика для GTV и REJS (так как они одинаковые)
-        price = soup.find('span', class_='price').text.strip()
-        availability = soup.find('div', class_='availability').text.strip()
-        
-        return {'price': price, 'availability': availability}
-    except Exception as e:
-        print(f"Error getting additional data for URL {url}: {e}")
-        return None
+def get_additional_data(soup, field_name):
+    # Извлечение данных о цене
+    price_elem = soup.select_one('.new_selector_for_price')
+    if price_elem:
+        price = float(price_elem.text.replace("грн", "").replace(",", ".").replace(" ", ""))
+    else:
+        price = 0
+    
+    # Извлечение данных о количестве
+    quantity_elem = soup.select_one('.new_selector_for_quantity')
+    if quantity_elem:
+        quantity_text = re.findall(r'\d+', quantity_elem.attrs.get('data-max', '0'))
+        quantity = int(quantity_text[0]) if quantity_text else 0
+    else:
+        quantity = 0
+    
+    return {f'Цена_{field_name}': price, f'Кол-во_{field_name}': quantity}
 
 def main():
     headers = {
