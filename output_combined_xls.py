@@ -27,25 +27,20 @@ logger.info("This is an info message for furniset script.")
 logger.error("This is an error message for furniset script.")
 start_time = datetime.now()
 
-def get_additional_data(soup, field_name):
-    #sleep(2)
-    #response = session.get(url, headers=headers)
-    #soup = BeautifulSoup(response.content, 'html.parser')
-    
-    price_elem = soup.select_one('.cost .price .price_value')
-    if price_elem:
-        price = float(price_elem.text.replace("грн", "").replace(",", ".").replace(" ", ""))
-    else:
-        price = 0
-    
-    quantity_elem = soup.select_one('.counter_block .plus')
-    if quantity_elem:
-        quantity_text = re.findall(r'\d+', quantity_elem.attrs.get('data-max', '0'))
-        quantity = int(quantity_text[0]) if quantity_text else 0
-    else:
-        quantity = 0
-    
-    return {f'Цена_{field_name}': price, f'Кол-во_{field_name}': quantity}
+def get_additional_data(session, headers, url, site_name):
+    try:
+        response = session.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Логика для GTV и REJS (так как они одинаковые)
+        price = soup.find('span', class_='price').text.strip()
+        availability = soup.find('div', class_='availability').text.strip()
+        
+        return {'price': price, 'availability': availability}
+    except Exception as e:
+        print(f"Error getting additional data for URL {url}: {e}")
+        return None
 
 def main():
     headers = {
@@ -117,9 +112,21 @@ def main():
                 row_to_write['Кол-во_FURNISET'] = availability_map.get(availability_text, "0")
                 row_to_write['Ссылка'] = f'{url}'
                 print(f"Row to Write: {row_to_write}")
+                # Получение дополнительных данных с gtv.com.ua
+                gtv_data = get_additional_data(session, headers, f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", 'GTV')
+                if gtv_data:
+                    row_to_write['Цена_GTV'] = gtv_data.get('price', '')
+                    row_to_write['Кол-во_GTV'] = gtv_data.get('availability', '')
+
+                # Получение дополнительных данных с rejs.com.ua
+                rejs_data = get_additional_data(session, headers, f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", 'REJS')
+                if rejs_data:
+                    row_to_write['Цена_REJS'] = rejs_data.get('price', '')
+                    row_to_write['Кол-во_REJS'] = rejs_data.get('availability', '')
                 df = pd.concat([df, pd.DataFrame([row_to_write])], ignore_index=True)  # Добавляем данные в df в блоке try
                 print("Текущий DataFrame после добавления данных:")
                 print(df)
+                
                 
             except Exception as e:
                 print(f"Ошибка при обработке URL {url}: {e}")
@@ -139,10 +146,10 @@ def main():
     unique_articles = set(article.strip() for article in articles)
 
 
-    print("Начало обработки уникальных артикулов")
+    
     for art_value in unique_articles:
         try:
-            print(f"Обработка артикула: {art_value}")
+            
 
             # Обработка GTV
             url_gtv = f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8"
@@ -176,13 +183,9 @@ def main():
             logger.error(f"Error processing article {art_value}. Error: {e}") 
 
     # Сохранение файла после обработки всех артикулов
-    print("Количество строк в DataFrame перед сохранением:", len(df))
-    print(df.head())
     output_file_path = 'C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx'
-    print("Содержимое DataFrame перед сохранением:")
-    print(df)
     df.to_excel(output_file_path, index=False)
-    print(f"Файл успешно сохранен по пути: {output_file_path}")
+    
               
 
     
