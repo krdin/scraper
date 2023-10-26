@@ -150,16 +150,23 @@ def main():
         df.to_excel("C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx", index=False)
         print("Данные успешно сохранены!")
     
-    # Чтение артикулов из файла
+    
+        # Считывание артикулов из файла
     with open('C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\art_gtv_hogert_test.txt', 'r') as f:
-        articles = f.readlines()
+        articles_from_file = [line.strip() for line in f.readlines()]
+
+    # Получение артикулов из DataFrame
+    articles_from_df = df['Артикул'].tolist()
+
+    # Объединение двух списков и удаление дубликатов
+    all_articles = list(set(articles_from_file + articles_from_df))
 
     # Удаление лишних пробелов и получение уникальных артикулов
-    unique_articles = set(article.strip() for article in articles)
+    unique_articles = set(article.strip() for article in all_articles)
 
 
     
-    for art_value in unique_articles:
+    for art_value in all_articles:
         try:
             
 
