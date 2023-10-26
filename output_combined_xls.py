@@ -168,7 +168,8 @@ def main():
     
     for art_value in all_articles:
         try:
-            
+            if art_value in df['Артикул'].values:
+                continue
 
             # Обработка GTV
             url_gtv = f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8"
