@@ -13,7 +13,7 @@ headers = {
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG) 
 
-log_folder_path = 'C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\log_furniset'
+log_folder_path = '/home/kuhnisol/krmart.in.ua/bot/script_update/log_furniset'
 log_file_name = f"{log_folder_path}/scraper_{datetime.now().strftime('%Y%m%d_%H%M%S_furniset')}.log"
 
 logger = logging.getLogger()
@@ -41,10 +41,8 @@ def get_additional_data(soup, field_name):
     
     # Для количества
     quantity_elem = soup.select_one('.plus')
-    print("Quantity Element:", quantity_elem)
     if quantity_elem:
         quantity = int(quantity_elem.get('data-max', 0))
-        print("Data Max Value:", quantity_elem.get('data-max'))
     else:
         quantity = 0
 
@@ -52,7 +50,7 @@ def get_additional_data(soup, field_name):
     return {f'Цена_{field_name}': price, f'Кол-во_{field_name}': quantity}
 
 def main():
-    file_path = 'C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\art_gtv_hogert_ss_test.txt'
+    file_path = '/home/kuhnisol/krmart.in.ua/bot/script_update/art_gtv_hogert_ss.txt'
     with open(file_path, 'r') as f:
         urls = f.readlines()
 
@@ -76,7 +74,7 @@ def main():
                 soup = BeautifulSoup(response.content, 'html.parser')
                 row_to_write = {}
 
-                sleep(2)
+                sleep(5)
                 price_element = soup.select_one("span.tov_cena")
                 price = price_element.text.strip() if price_element else "не указана"
                 print(f"Price: {price}")
@@ -138,23 +136,22 @@ def main():
                     row_to_write['Кол-во_GTV'] += rejs_data.get('Кол-во_REJS', 0)
 
                 df = pd.concat([df, pd.DataFrame([row_to_write])], ignore_index=True)
-                print("Текущий DataFrame после добавления данных:")
-                print(df)
+                
                 
                 
             except Exception as e:
                 print(f"Ошибка при обработке URL {url}: {e}")
                 logger.error(f"Error processing URL {url}. Error: {e}")
                 print("Final DataFrame:")
-                print(df)
+                
 
         print("Сохранение собранных данных в output_combined.xlsx...")
-        df.to_excel("C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx", index=False)
+        df.to_excel("/home/kuhnisol/krmart.in.ua/bot/script_update/furniset/output_combined.xlsx", index=False)
         print("Данные успешно сохранены!")
     
     
         # Считывание артикулов из файла
-    with open('C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\art_gtv_hogert_test.txt', 'r') as f:
+    with open('/home/kuhnisol/krmart.in.ua/bot/script_update/art_gtv_hogert_test.txt', 'r') as f:
         articles_from_file = [line.strip() for line in f.readlines()]
 
     # Получение артикулов из DataFrame
@@ -206,14 +203,14 @@ def main():
             df.loc[len(df)] = row_to_write
             
             # Добавьте задержку перед следующим запросом
-            sleep(1)
+            sleep(10)
 
         except Exception as e:
             print(f"Ошибка при обработке артикула {art_value}: {e}")
             logger.error(f"Error processing article {art_value}. Error: {e}") 
 
     # Сохранение файла после обработки всех артикулов
-    output_file_path = 'C:\\FTP\\krmart\\GTV\\furni\\фото\\furni\\6\\script_update\\output_combined.xlsx'
+    output_file_path = '/home/kuhnisol/krmart.in.ua/bot/script_update/furniset/output_combined.xlsx'
     df.to_excel(output_file_path, index=False)
     
               
