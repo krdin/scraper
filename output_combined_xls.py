@@ -121,6 +121,7 @@ def main():
                 print(f"Row to Write: {row_to_write}")
                 # Получение данных с gtv.com.ua
                 response_gtv = session.get(f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", headers=headers)
+                sleep(5) 
                 soup_gtv = BeautifulSoup(response_gtv.content, 'html.parser')
                 gtv_data = get_additional_data(soup_gtv, 'GTV')
                 if gtv_data:
@@ -129,6 +130,7 @@ def main():
 
                 # Получение данных с rejs.com.ua
                 response_rejs = session.get(f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8", headers=headers)
+                sleep(5) 
                 soup_rejs = BeautifulSoup(response_rejs.content, 'html.parser')
                 rejs_data = get_additional_data(soup_rejs, 'REJS')
                 if rejs_data:
@@ -167,6 +169,7 @@ def main():
 
     
     for art_value in all_articles:
+        sleep(5) 
         try:
             if art_value in df['Артикул'].values:
                 continue
@@ -174,6 +177,7 @@ def main():
             # Обработка GTV
             url_gtv = f"https://gtv.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8"
             response_gtv = session_gtv.get(url_gtv, headers=headers)
+            sleep(5)
             soup_gtv = BeautifulSoup(response_gtv.content, 'html.parser')
             
             # Получение названия продукта для GTV
@@ -186,6 +190,7 @@ def main():
             # Обработка REJS
             url_rejs = f"https://rejs.com.ua/catalog/?q={art_value}&s=%D0%97%D0%BD%D0%B0%D0%B9%D1%82%D0%B8"
             response_rejs = session_rejs.get(url_rejs, headers=headers)
+            sleep(5)
             soup_rejs = BeautifulSoup(response_rejs.content, 'html.parser')
             
             # Получение дополнительных данных с rejs.com.ua
