@@ -6,8 +6,13 @@ import logging
 from datetime import datetime
 from time import sleep
 import os
+import threading
 from flask import Flask
+app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return "Hello, World!"
 headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537'
     }
@@ -17,7 +22,6 @@ if not os.path.exists(log_folder_path):
     os.makedirs(log_folder_path)
 
 log_file_name = f"{log_folder_path}/scraper_{datetime.now().strftime('%Y%m%d_%H%M%S_furniset')}.log"
-
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG) 
 
@@ -25,6 +29,7 @@ file_handler_all = logging.FileHandler(log_file_name)
 file_handler_all.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 file_handler_all.setFormatter(formatter)
 
 logger.addHandler(file_handler_all)
@@ -33,13 +38,6 @@ logger.info("This is an info message for furniset script.")
 logger.error("This is an error message for furniset script.")
 start_time = datetime.now()
 app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Hello, World!"
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
 
 def get_additional_data(soup, field_name):
     # Для цены
@@ -59,7 +57,7 @@ def get_additional_data(soup, field_name):
 
     return {f'Цена_{field_name}': price, f'Кол-во_{field_name}': quantity}
 
-def main():
+def main_logic():
     file_path = 'art_gtv_hogert_ss.txt'
     with open(file_path, 'r') as f:
         urls = f.readlines()
@@ -251,6 +249,7 @@ def main():
 
 
 
-
 if __name__ == "__main__":
-    main()
+  thread = threading.Thread(target=main_logic)
+  thread.start()
+  app.run(host="0.0.0.0", port=8080)
