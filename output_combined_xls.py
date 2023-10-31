@@ -29,6 +29,11 @@ proxy_list = [
     {"http": "http://38.180.55.61:8888", "https": "http://38.180.55.61:8888"},
     # Добавьте сюда другие прокси
 ]
+def make_request(url):
+  proxies = random.choice(proxy_list)
+  response = requests.get(url, headers=headers, proxies=proxies)
+  return response
+  
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG) 
 
@@ -80,7 +85,7 @@ def main_logic():
 
         for url in urls:
             try:
-                response = session.get(url.strip())
+              response = make_request(url.strip())
                 print(f"Status Code for {url.strip()}: {response.status_code}")
                 if response.status_code != 200:
                     logging.warning(f"Не удалось загрузить страницу: {url}, Status Code: {response.status_code}")
