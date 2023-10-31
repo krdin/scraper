@@ -8,6 +8,8 @@ from time import sleep
 import os
 import threading
 from flask import Flask
+import random
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -22,6 +24,11 @@ if not os.path.exists(log_folder_path):
     os.makedirs(log_folder_path)
 
 log_file_name = f"{log_folder_path}/scraper_{datetime.now().strftime('%Y%m%d_%H%M%S_furniset')}.log"
+proxy_list = [
+    {"http": "http://155.0.72.251:3128", "https": "http://155.0.72.251:3128"},
+    {"http": "http://38.180.55.61:8888", "https": "http://38.180.55.61:8888"},
+    # Добавьте сюда другие прокси
+]
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG) 
 
@@ -58,7 +65,7 @@ def get_additional_data(soup, field_name):
     return {f'Цена_{field_name}': price, f'Кол-во_{field_name}': quantity}
 
 def main_logic():
-    file_path = 'art_gtv_hogert_ss.txt'
+    file_path = 'art_gtv_hogert_ss_test.txt'
     with open(file_path, 'r') as f:
         urls = f.readlines()
 
@@ -162,7 +169,7 @@ def main_logic():
 
 
         # Считывание артикулов из файла
-    with open('art_gtv_hogert.txt', 'r') as f:
+    with open('art_gtv_hogert_test.txt', 'r') as f:
         articles_from_file = [line.strip() for line in f.readlines()]
 
     # Получение артикулов из DataFrame
